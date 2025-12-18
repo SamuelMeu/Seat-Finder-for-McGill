@@ -1,7 +1,7 @@
 /**
  * Service to handle interaction with the McGill Visual Schedule Builder
  */
-import { XMLParser } from "npm:fast-xml-parser"
+import { XMLParser } from "npm:fast-xml-parser@5.3.3"
 
 // Constants
 const ENDPOINTS = {
@@ -57,30 +57,30 @@ export interface CourseInfo {
  * @throws {Error} If the request fails
  */
 export async function getCourseInfo(course: string, term: string): Promise<CourseInfo> {
-    const url = new URL(ENDPOINTS.COURSE);
+    const url = new URL(ENDPOINTS.COURSE)
 
     // Append the correct time related parameters required by VSB
-    const now: Date = new Date();
-    const minutesSinceEpoch: number = now.getTime() / 60000;
-    const t: number = Math.floor(minutesSinceEpoch) % 1000;
-    url.searchParams.append('t', t.toString());
+    const now: Date = new Date()
+    const minutesSinceEpoch: number = now.getTime() / 60000
+    const t: number = Math.floor(minutesSinceEpoch) % 1000
+    url.searchParams.append('t', t.toString())
 
-    const e: number = (t % 3) + (t % 39) + (t % 42);
-    url.searchParams.append('e', e.toString());
+    const e: number = (t % 3) + (t % 39) + (t % 42)
+    url.searchParams.append('e', e.toString())
 
     // Append the parameters related to the course
-    url.searchParams.append('term', term);
-    url.searchParams.append('course_0_0', course);
+    url.searchParams.append('term', term)
+    url.searchParams.append('course_0_0', course)
 
     // Fetch course data
-    const response = await fetch(url);
+    const response = await fetch(url)
 
     if (!response.ok) {
-        throw new Error(`VSB request failed with code ${response.status}`);
+        throw new Error(`VSB request failed with code ${response.status}`)
     }
 
     // Convert xml to js object
-    const xml = await response.text();
+    const xml = await response.text()
     const obj = parser.parse(xml)
 
     if (obj.addcourse.errors.error != undefined) {

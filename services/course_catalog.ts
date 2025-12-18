@@ -1,7 +1,8 @@
 /**
  * Scrape McGill's course catalog to find course codes.
  */
-import { DOMParser, Element } from "jsr:@b-fuze/deno-dom";
+import { kv } from "./db.ts"
+import { DOMParser } from "jsr:@b-fuze/deno-dom@0.1.56"
 
 // Constants
 const URL = "https://coursecatalogue.mcgill.ca/courses/"
@@ -10,12 +11,13 @@ const URL = "https://coursecatalogue.mcgill.ca/courses/"
  * @param key Course code and number (e.g. comp 202)
  * @param title Course title (e.g. Foundations of Programming)
  */
-interface Course {
+export interface Course {
     key: string, 
     title: string
 }
 
 /**
+ * Scrapes McGill's course catalog to return a list of all course keys and titles. 
  * @returns A list of all mcgill courses.
  */
 export async function getCourses(): Promise<Course[]> {
@@ -51,3 +53,51 @@ export async function getCourses(): Promise<Course[]> {
     return list
 }
 
+/**
+ * Updates the course list in the database.
+ */
+export async function updateCourses() {
+    // Scrape courses
+    const courses = await getCourses()
+
+    // Create an atomic transaction
+    let atomic = kv.atomic()
+
+    let i = 0
+
+    while (courses[0] != undefined) {
+        i++
+        const course = courses.pop()!
+
+        /**
+         * Set prefixes
+         * Change in future for a tree like dataset with all possible searches to reduce db size.
+         * Ex: (kv.get(query) => list of 10 items) much faster and smaller
+         */
+        const prefix = kv.atomic()
+
+        let str = ""
+
+        for (const letter of course.key) {
+            str += letter
+            prefix.set(["course-by-prefix", str, course.key], course)
+        }
+
+        await prefix.commit()
+
+        // Populate course database
+        atomic.set(["courses", course.key], course)
+
+        if(i == 1000) {
+            const commit = await atomic.commit()
+            if (!commit.ok) {
+                throw new Error("Error when commiting")
+            }
+            atomic = kv.atomic()
+        }
+    }
+}
+
+console.log("Updating course catalog...")
+await updateCourses()
+console.log("Done")

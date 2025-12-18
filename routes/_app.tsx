@@ -1,6 +1,7 @@
+import { PageProps } from "fresh";
 import { define } from "../utils.ts";
 
-export default define.page(function App({ Component }) {
+export default define.page(function App({ Component }: PageProps) {
   return (
     <html>
       <head>
