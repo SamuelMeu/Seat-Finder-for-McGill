@@ -20,6 +20,7 @@
   ],
   "imports": {
     "@/": "./",
+    "@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom@^0.1.56",
     "fast-xml-parser": "npm:fast-xml-parser@^5.3.3",
     "fresh": "jsr:@fresh/core@^2.2.0",
     "preact": "npm:preact@^10.27.2",
