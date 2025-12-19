@@ -1,5 +1,6 @@
 import { PageProps } from "fresh";
 import { define } from "../utils.ts";
+import TopBar from "../components/TopBar.tsx";
 
 export default define.page(function App({ Component }: PageProps) {
   return (
@@ -9,7 +10,8 @@ export default define.page(function App({ Component }: PageProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Seat Finder for McGill</title>
       </head>
-      <body>
+      <body class="bg-gray-100">
+        <TopBar />
         <Component />
       </body>
     </html>
