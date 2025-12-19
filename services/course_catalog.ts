@@ -45,8 +45,8 @@ export async function getCourses(): Promise<Course[]> {
         const course = li.querySelector('a')?.textContent
         const split = course?.split(" - ")
         list.push({
-            key: split![0].toLowerCase(),
-            title: split![1].toLowerCase()
+            key: split![0].toUpperCase(),
+            title: split![1]
         })
     }
 
@@ -78,15 +78,15 @@ export async function updateCourses() {
 
         let str = ""
 
-        for (const letter of course.key) {
+        for (const letter of course.key.toLowerCase()) {
             str += letter
-            prefix.set(["course-by-prefix", str, course.key], course)
+            prefix.set(["course-by-prefix", str, course.key.toLowerCase()], course)
         }
 
         await prefix.commit()
 
         // Populate course database
-        atomic.set(["courses", course.key], course)
+        atomic.set(["courses", course.key.toLowerCase()], course)
 
         if(i == 1000) {
             const commit = await atomic.commit()
