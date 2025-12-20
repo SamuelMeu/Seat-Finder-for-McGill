@@ -132,7 +132,6 @@ export async function getCourseInfo(course: string, term: string): Promise<Cours
         }
     } else {
         const section  = data.course.uselection.selection.block
-        console.log(section)
         if (Array.isArray(section)) {
             for (const item of section) {
                 if (!nblist.includes(item["@secNo"])) {
