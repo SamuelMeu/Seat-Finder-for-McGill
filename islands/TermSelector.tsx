@@ -15,7 +15,7 @@ export default function TermSelector(props: TermProps) {
                         class="flex flex-row gap-x-2 items-center cursor-pointer"
                         onClick={() => selectedTerm.value = term.code}
                     >
-                        <span class={`w-5 h-5 rounded-sm border border-red-400 ${selectedTerm.value == term.code && "bg-red-800"}`}></span>
+                        <span class={`w-5 h-5 rounded-sm border-2 border-red-400 ${selectedTerm.value == term.code && "bg-red-800"}`}></span>
                         {term.name}
                     </li>
                 )

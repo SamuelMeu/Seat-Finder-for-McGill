@@ -1,9 +1,9 @@
-import { selectedTerm, selectedCourse, openCourseForm } from "../utils/courseCart.tsx";
+import { selectedTerm, selectedCourse, openCourseForm, courseCart } from "../utils/courseCart.tsx";
 import { CourseInfo } from "../services/vsb.ts";
 import Box from "../components/Box.tsx";
 import CourseSection from "../components/CourseSection.tsx";
+import CloseButton from "../components/CloseButton.tsx";
 import { useSignalEffect, useSignal } from "@preact/signals";
-import { load } from "jsr:@std/dotenv@~0.225.5";
 
 export default function CourseModal() {
     const courseData = useSignal<CourseInfo | null>()
@@ -41,7 +41,7 @@ export default function CourseModal() {
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div class="w-2xl max-w-full">
                 <Box title="Not Found">
-                    <button class="absolute top-2 right-2 w-6 h-6 rounded-md bg-red-400 flex items-center justify-center text-white shadow-lg cursor-pointer" type="button" onClick={() => {openCourseForm.value = false; courseData.value = null}}>X</button>
+                    <CloseButton class="absolute top-2 right-2" onClick={() => {openCourseForm.value = false; courseData.value = null}}/>
                     Perhaps this course is not offered this semester?
                 </Box>
             </div>
@@ -56,7 +56,21 @@ export default function CourseModal() {
                     <div class="flex flex-col gap-y-2 mt-2">
                         {
                             courseData.value.sections.map(sec => (
-                                <CourseSection type = {sec.type} number={sec.number} seats={sec.openSeats} subscribable={sec.isFull}/>
+                                <CourseSection 
+                                    type = {sec.type} 
+                                    number={sec.number} 
+                                    seats={sec.openSeats} 
+                                    subscribable={sec.isFull}
+                                    onAdd={() => {
+                                        courseCart.value = [...courseCart.value, {
+                                            key: courseData.value!.key,
+                                            type: sec.type,
+                                            secNo: sec.number
+                                        }]
+                                        openCourseForm.value = false
+                                        courseData.value = null
+                                    }}
+                                />
                             ))
                         }
                     </div>

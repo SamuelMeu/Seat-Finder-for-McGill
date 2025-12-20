@@ -1,7 +1,7 @@
-import { useSignal } from "@preact/signals";
 import SearchBar from "../islands/SearchBar.tsx";
 import TermSelector from "../islands/TermSelector.tsx";
 import CourseModal from "../islands/CourseModal.tsx";
+import Following from "../islands/Following.tsx";
 import Box from "../components/Box.tsx"
 import { define } from "../utils.ts";
 import { getTerms } from "../services/db.ts";
@@ -19,6 +19,9 @@ export default define.page(async function Home() {
         </Box>
         <Box title="Find Courses">
           <SearchBar/>
+        </Box>
+        <Box title="Your Subscriptions">
+          <Following/>
         </Box>
       </div>
     </div>

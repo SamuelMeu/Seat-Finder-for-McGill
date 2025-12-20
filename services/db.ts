@@ -57,3 +57,10 @@ export async function getTerms(): Promise<Term[]> {
 
     return terms
 }
+
+
+export interface CourseSubscription {
+    key: string, 
+    type: string,
+    secNo: number
+}

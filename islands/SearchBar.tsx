@@ -22,12 +22,12 @@ export default function SearchBar() {
         return () => clearTimeout(dbounce)
     })
 
-    let show = searchFocus.value
+    const show = searchFocus.value
 
     return (
         <div class="w-full">
             <input
-                class={`w-full bg-transparent text-black text-base border border-red-500 px-3 py-2 transition duration-300 ease focus:outline-none focus:border-red-500 hover:border-red-500 shadow-sm focus:shadow ${
+                class={`w-full bg-transparent text-black text-base border-2 border-red-200 px-3 py-2 transition duration-300 ease focus:outline-none shadow-sm focus:shadow ${
                     (show && results.value.length > 0) ? "rounded-t-lg rounded-b-sm" : "rounded-lg"
                 }`}
                 type="text" 
@@ -38,7 +38,7 @@ export default function SearchBar() {
                 onFocusOut={() => searchFocus.value = false}
             />
 
-            {show && results.value.length > 0 ? <div class="border border-red-500 rounded-b-lg rounded-t-sm bg-red-500/10 backdrop-blur-sm mt-1 shadow-lg min-h-0 max-h-50 overflow-y-auto truncate">
+            {show && results.value.length > 0 ? <div class="border-2 border-red-200 rounded-b-lg rounded-t-sm bg-red-300/10 backdrop-blur-sm mt-1 shadow-lg min-h-0 max-h-50 overflow-y-auto truncate">
                 <ul class="divide-y divide-red-500/12">
                     {
                         results.value.map((course) => (
