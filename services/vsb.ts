@@ -102,8 +102,37 @@ export async function getCourseInfo(course: string, term: string): Promise<Cours
     const nblist:number[] = []
     const sections: CourseSection[] = []
 
-    for (const sec of data.course.uselection) {
-        const section = sec.selection.block
+    if (Array.isArray(data.course.uselection)) {
+        for (const sec of data.course.uselection) {
+            const section = sec.selection.block
+            if (Array.isArray(section)) {
+                for (const item of section) {
+                    if (!nblist.includes(item["@secNo"])) {
+                        nblist.push(item["@secNo"])
+                        sections.push({
+                            type: item["@type"],
+                            isFull: item["@isFull"] == 0 ? false : true,
+                            campus: item["@campus"],
+                            number: item["@secNo"],
+                            credits: item["@credits"],
+                            openSeats: item["@nres"]
+                        })
+                    }
+                }
+            } else {
+                sections.push({
+                    type: section["@type"],
+                    isFull: section["@isFull"] == 0 ? false : true,
+                    campus: section["@campus"],
+                    number: section["@secNo"],
+                    credits: section["@credits"],
+                    openSeats: section["@nres"]
+                })
+            }
+        }
+    } else {
+        const section  = data.course.uselection.selection.block
+        console.log(section)
         if (Array.isArray(section)) {
             for (const item of section) {
                 if (!nblist.includes(item["@secNo"])) {
